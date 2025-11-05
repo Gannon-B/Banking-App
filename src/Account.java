@@ -15,8 +15,9 @@ public class Account {
     public Account(String accountType, double balance) {
         this.accountType = accountType;
         this.balance = balance;
-        StringBuilder id = new StringBuilder(String.valueOf(nextId++));
         String initID = String.valueOf(nextId++);
+        StringBuilder id = new StringBuilder(String.valueOf(initID));
+
         for  (int i = 0; i < 10-initID.length(); i++) {
             id.insert(0, "0");
 

@@ -17,7 +17,6 @@ public class Menu {
         }
         else if (choice == 2) {
             System.out.println("\n\n\n\n\n\n\n");
-            System.out.println("No options yet!");
             createAccount();
         }
     }
