@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 
 public class Menu {
@@ -10,6 +11,7 @@ public class Menu {
         System.out.println("\n\n\n\n\n\n\n");
         System.out.println("1. Choose Account");
         System.out.println("2. Create Account");
+        System.out.println("3. Remove Account");
         System.out.print("Enter your choice: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -20,6 +22,10 @@ public class Menu {
         else if (choice == 2) {
             System.out.println("\n\n\n\n\n\n\n");
             createAccount();
+        }
+        else if (choice == 3) {
+            System.out.println("\n\n\n\n\n\n\n");
+            deleteAccount();
         }
     }
 
@@ -73,6 +79,41 @@ public class Menu {
     }
 
 
+    public static void deleteAccount() {
+        for (int i = 0; i < Account.globalAccountList.size(); i++) {
+            Account account = Account.globalAccountList.get(i);
+            System.out.println("Account " + i + ": " + account.getAccountType());
+        }
+        System.out.println("Select account to delete or press back to return to menu: ");
+        String input = scanner.nextLine();
+        System.out.println("\n\n\n\n\n\n\n");
+        if (input.equalsIgnoreCase("back")) {
+            mainMenu();
+        }
+        else if (!input.equalsIgnoreCase("back")) {
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice > Account.globalAccountList.size() - 1 || choice < 0) {
+                    System.out.println("Invalid choice");
+                    deleteAccount();
+                }
+                else {
+                    for (int i = 0; i < Account.globalAccountList.size(); i++) {
+                        if (choice == i) {
+                            Account.globalAccountList.remove(i);
+                            mainMenu();
+                        }
+                    }
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Invalid number format!");
+                deleteAccount();
+            }
+        }
+    }
+
+
     public static void displayAccount(Account account) {
         account.getAccountType();
         account.getAccountNumber();
@@ -89,28 +130,85 @@ public class Menu {
         System.out.println("2. Withdraw");
         System.out.println("3. Back");
         System.out.print("Select Option: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("\n\n\n\n\n\n\n");
-        if (choice == 1){
-            System.out.println("Enter Deposit Amount:");
-            double amountDeposited = scanner.nextInt();
+
+        if (scanner.hasNextInt()) {
+            int choice = scanner.nextInt();
             scanner.nextLine();
-            account.Deposit(amountDeposited);
-            Menu.mainMenu();
+            System.out.print("\n\n\n\n\n\n\n");
+
+            if (choice == 1) {
+                deposit(account);
+            }
+            else if (choice == 2) {
+                withdraw(account);
+            } else if (choice == 3) {
+                chooseAccount();
+            } else {
+                System.out.println("Invalid choice!");
+                displayAccount(account);
+            }
         }
-        else if (choice == 2){
-            System.out.println("Enter Withdraw Amount:");
-            double amountWithdrawn = scanner.nextInt();
+        else {
             scanner.nextLine();
-            account.Withdraw(amountWithdrawn);
-            Menu.mainMenu();
-        }
-        else if (choice == 3){
-            chooseAccount();
+            System.out.println("Invalid choice!");
+            displayAccount(account);
         }
     }
 
+    public static void deposit(Account account) {
+
+        System.out.println("Enter Deposit Amount, press 0 to go back: ");
+        if (scanner.hasNextInt()) {
+            double amountDeposited = scanner.nextInt();
+            if (amountDeposited > 0) {
+                scanner.nextLine();
+                account.Deposit(amountDeposited);
+                Menu.mainMenu();
+            }
+            else if (amountDeposited == 0) {
+                displayAccount(account);
+            }
+            else {
+                System.out.println("Invalid amount!");
+                deposit(account);
+            }
+        }
+        else {
+            scanner.nextLine();
+            System.out.println("Invalid amount!");
+            deposit(account);
+        }
+
+
+    }
+
+    public static void withdraw(Account account) {
+
+        System.out.println("Enter Withdraw Amount, press 0 to go back: ");
+        if (scanner.hasNextInt()) {
+            double amountWithdrawn = scanner.nextInt();
+            if (amountWithdrawn > 0 && amountWithdrawn < account.getBalance()) {
+                scanner.nextLine();
+                account.Withdraw(amountWithdrawn);
+                Menu.mainMenu();
+            }
+            else if (amountWithdrawn == 0) {
+                displayAccount(account);
+            }
+            else {
+                System.out.println("Invalid amount!");
+                withdraw(account);
+            }
+
+        }
+        else {
+            scanner.nextLine();
+            System.out.println("Invalid amount!");
+            withdraw(account);
+        }
+
+
+    }
 
 
 
