@@ -68,13 +68,36 @@ public class Menu {
         System.out.println("Enter Account Type or say 'back' to return to menu:");
         String accountType = scanner.nextLine();
         double balance = 0;
-        if (accountType.equalsIgnoreCase("back")){
+
+        if (accountType.equalsIgnoreCase("back")) {
             mainMenu();
+            return;
         }
-        else {
+
+        if (accountType.trim().isEmpty()) {
+            System.out.println("Invalid Account Type!");
+            createAccount();
+            return;
+        }
+
+        boolean exists = false;
+
+        // Check if account type already exists
+        for (int i = 0; i < Account.globalAccountList.size(); i++) {
+            if (accountType.equalsIgnoreCase(Account.globalAccountList.get(i).getAccountType())) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (exists) {
+            System.out.println("Account already exists!");
+            createAccount();
+        } else {
             Account newAccount = new Account(accountType, balance);
             Account.globalAccountList.add(newAccount);
-            mainMenu();
+            System.out.println("Account created successfully!");
+            mainMenu(); // return to main menu after successful creation
         }
     }
 
