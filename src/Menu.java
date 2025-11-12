@@ -151,7 +151,8 @@ public class Menu {
     public static void userPrompt(Account account) {
         System.out.println("1. Deposit");
         System.out.println("2. Withdraw");
-        System.out.println("3. Back");
+        System.out.println("3. Transfer");
+        System.out.println("4. Back");
         System.out.print("Select Option: ");
 
         if (scanner.hasNextInt()) {
@@ -164,7 +165,10 @@ public class Menu {
             }
             else if (choice == 2) {
                 withdraw(account);
-            } else if (choice == 3) {
+            }
+            else if (choice == 3) {
+                transfer(account);
+            }else if (choice == 4) {
                 chooseAccount();
             } else {
                 System.out.println("Invalid choice!");
@@ -233,10 +237,67 @@ public class Menu {
 
     }
 
+    public static void transfer(Account account) {
+
+        if (Account.globalAccountList.size() > 1) {
+            System.out.println("Enter Transfer Amount, press 0 to go back: ");
+            if (scanner.hasNextInt()) {
+                double amountToTransfer = scanner.nextInt();
+                if (amountToTransfer > 0 && amountToTransfer < account.getBalance()) {
+                    scanner.nextLine();
+                    Account depositAccount = null;
+
+                    for (int i = 0; i < Account.globalAccountList.size(); i++) {
+                        Account tempAccount = Account.globalAccountList.get(i);
+                        if (!tempAccount.getAccountType().equals(account.getAccountType())) {
+                            System.out.println("Account " + i + ": " + tempAccount.getAccountType());
+                        }
+                    }
+                    System.out.println("Enter your account Index or enter 'back' to return to account: ");
+                    String input = scanner.nextLine();
+                    System.out.println("\n\n\n\n\n\n\n");
+                    if (input.equalsIgnoreCase("back")) {
+                        displayAccount(account);
+                        userPrompt(account);
+                    } else if (!input.equalsIgnoreCase("back")) {
+                        try {
+                            int choice = Integer.parseInt(input);
+                            if (choice > Account.globalAccountList.size() - 1 || choice < 0) {
+                                System.out.println("Invalid choice");
+                                transfer(account);
+                            } else {
+                                account.Withdraw(amountToTransfer);
+                                depositAccount = Account.globalAccountList.get(choice);
+                                depositAccount.Deposit(amountToTransfer);
+                                mainMenu();
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid number format!");
+                            withdraw(account);
+                        }
+                    }
 
 
+                } else if (amountToTransfer == 0) {
+                    displayAccount(account);
+                } else {
+                    System.out.println("Invalid amount!");
+                    transfer(account);
+                }
 
+            } else {
+                scanner.nextLine();
+                System.out.println("Invalid amount!");
+                transfer(account);
+            }
+        }
+        else {
+            System.out.println("You only have one account");
+            displayAccount(account);
+            userPrompt(account);
+        }
 
+    }
 
 
 
