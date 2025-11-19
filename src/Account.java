@@ -26,6 +26,12 @@ public class Account {
         this.accountNumber = id.toString();
     }
 
+    public Account(String accountType, double balance, String accountNumber) {
+        this.accountType = accountType;
+        this.balance = balance;
+        this.accountNumber = accountNumber;
+    }
+
     public String getAccountType() {
         return accountType;
     }

@@ -2,5 +2,6 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the
 
 void main() {
-    Menu.mainMenu();
+    System.out.println(System.getProperty("user.dir"));
+    Menu.initialize();
 }

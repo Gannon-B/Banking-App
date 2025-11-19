@@ -1,11 +1,64 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-
+import java.io.File;
 
 public class Menu {
 
     static Scanner scanner = new Scanner(System.in);
+
+
+    public static void initialize(){
+        System.out.print("\n\n\nWelcome to the user banking program\n\n" + "Would you like to:\n 1: login(Existing Users)\n 2: create a new account?(New Users)\n");
+        String userChoice = scanner.nextLine();
+        if (userChoice.equals("1")) {
+            userLogin();
+        }
+        else if (userChoice.equals("2")) {
+            createLogin();
+        }
+    }
+
+    public static void userLogin() {
+        System.out.println("Please enter your username: ");
+        String username = scanner.nextLine().trim();
+
+        File userDir = new File("Users"); // make sure this folder exists
+        if (!userDir.exists()) {
+            userDir.mkdir(); // create the folder if it doesn't exist
+        }
+
+        File userFile = new File(userDir, username + ".csv");
+        if (userFile.exists()) {
+            System.out.println("Welcome back, " + username + "! Loading your accounts...");
+            // Clear globalAccountList first to avoid duplicates
+            Account.globalAccountList.clear();
+            FileManager.fileReader(username);
+            System.out.println("Loaded " + Account.globalAccountList.size() + " account(s).");
+            mainMenu();
+        }
+        else {
+            System.out.println("No user found with username '" + username + "'.");
+            System.out.println("You can create a new account for this user.");
+            createLogin();
+        }
+    }
+
+    public static void createLogin() {
+        System.out.println("Please enter your desired username: ");
+        String desiredUsername = scanner.nextLine().trim();
+        File userDir = new File("Users");
+        File desiredFile = new File(userDir, desiredUsername + ".csv");
+        if (desiredFile.exists()) {
+            System.out.println("Username already exists, choose a different name.");
+            createLogin();
+        }
+        else {
+            System.out.println("Wonderful Choice");
+            FileManager.fileCreator(desiredUsername);
+            userLogin();
+        }
+    }
 
     public static void mainMenu() {
         System.out.println("\n\n\n\n\n\n\n");
@@ -94,7 +147,7 @@ public class Menu {
             System.out.println("Account already exists!");
             createAccount();
         } else {
-            Account newAccount = new Account(accountType, balance);
+            Account newAccount = new Account(accountType, balance, "");
             Account.globalAccountList.add(newAccount);
             System.out.println("Account created successfully!");
             mainMenu(); // return to main menu after successful creation
@@ -296,7 +349,6 @@ public class Menu {
             displayAccount(account);
             userPrompt(account);
         }
-
     }
 
 
