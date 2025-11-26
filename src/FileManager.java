@@ -3,14 +3,48 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
-
+import java.nio.file.Files;
 
 
 public class FileManager {
 
-    public static void fileUpdater() {
 
+
+    public static void fileUpdater(String username) {
+        System.out.println("Hello this is accounts" + Account.globalAccountList);
+        File userFile = new File("users/" + username + ".csv");
+        try (FileWriter writer = new FileWriter(userFile)) {
+            writer.append("AccountType,Balance,AccountNumber\n" );
+            for (int i = 0; i < Account.globalAccountList.size(); i++) {
+                Account account = Account.globalAccountList.get(i);
+                writer.append(account.getAccountType()+","+account.getBalance()+","+account.getAccountNumber()+ "\n");
+                writer.flush();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public static void AccountNumbersFile(){
+        File accountNumberFile = new File("data/AccountNumbers.txt");
+        int theAccountNumber = 0;
+
+
+        try  {
+            String content = Files.readString(accountNumberFile.toPath()).trim();
+            theAccountNumber = Integer.parseInt(content);
+            int newNumber = theAccountNumber + 1;
+
+            try (FileWriter writer = new FileWriter(accountNumberFile)) {
+                writer.write(Integer.toString(newNumber));
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public static void fileCreator(String username) {
@@ -19,7 +53,7 @@ public class FileManager {
             try (FileWriter writer = new FileWriter(userFile)) {
                 writer.append("AccountType,Balance,AccountNumber\n" );
                 writer.append("Savings,0,0000000001\n");
-                writer.append("Invest,0,0000000002");
+                writer.append("Invest,0,0000000002\n");
                 writer.flush();
             }
             catch (IOException e) {

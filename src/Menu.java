@@ -5,11 +5,12 @@ import java.io.File;
 
 public class Menu {
 
+    static String username;
     static Scanner scanner = new Scanner(System.in);
 
 
     public static void initialize(){
-        System.out.print("\n\n\nWelcome to the user banking program\n\n" + "Would you like to:\n 1: login(Existing Users)\n 2: create a new account?(New Users)\n");
+        System.out.print("\n\n\nWelcome to the user banking program\n\n" + "Would you like to:\n 1: login: (Existing Users)\n 2: create a new account?: (New Users)\n\n");
         String userChoice = scanner.nextLine();
         if (userChoice.equals("1")) {
             userLogin();
@@ -21,8 +22,7 @@ public class Menu {
 
     public static void userLogin() {
         System.out.println("Please enter your username: ");
-        String username = scanner.nextLine().trim();
-
+        username = scanner.nextLine().trim();
         File userDir = new File("Users"); // make sure this folder exists
         if (!userDir.exists()) {
             userDir.mkdir(); // create the folder if it doesn't exist
@@ -150,6 +150,7 @@ public class Menu {
             Account newAccount = new Account(accountType, balance, "");
             Account.globalAccountList.add(newAccount);
             System.out.println("Account created successfully!");
+            FileManager.fileUpdater(username);
             mainMenu(); // return to main menu after successful creation
         }
     }
