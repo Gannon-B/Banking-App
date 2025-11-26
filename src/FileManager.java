@@ -11,7 +11,6 @@ public class FileManager {
 
 
     public static void fileUpdater(String username) {
-        System.out.println("Hello this is accounts" + Account.globalAccountList);
         File userFile = new File("users/" + username + ".csv");
         try (FileWriter writer = new FileWriter(userFile)) {
             writer.append("AccountType,Balance,AccountNumber\n" );

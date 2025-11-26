@@ -214,6 +214,7 @@ public class Menu {
                     for (int i = 0; i < Account.globalAccountList.size(); i++) {
                         if (choice == i) {
                             Account.globalAccountList.remove(i);
+                            FileManager.fileUpdater(username);
                             mainMenu();
                         }
                     }
@@ -280,6 +281,7 @@ public class Menu {
             if (amountDeposited > 0) {
                 scanner.nextLine();
                 account.Deposit(amountDeposited);
+                FileManager.fileUpdater(username);
                 Menu.mainMenu();
             }
             else if (amountDeposited == 0) {
@@ -307,6 +309,7 @@ public class Menu {
             if (amountWithdrawn > 0 && amountWithdrawn < account.getBalance()) {
                 scanner.nextLine();
                 account.Withdraw(amountWithdrawn);
+                FileManager.fileUpdater(username);
                 Menu.mainMenu();
             }
             else if (amountWithdrawn == 0) {
@@ -359,6 +362,7 @@ public class Menu {
                                 account.Withdraw(amountToTransfer);
                                 depositAccount = Account.globalAccountList.get(choice);
                                 depositAccount.Deposit(amountToTransfer);
+                                FileManager.fileUpdater(username);
                                 mainMenu();
                             }
                         } catch (NumberFormatException e) {
