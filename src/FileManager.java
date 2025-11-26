@@ -26,7 +26,21 @@ public class FileManager {
         }
     }
 
-    public static void AccountNumbersFile(){
+    public static void AccountNumberFileReset(){
+        File accountNumberFile = new File("data/AccountNumbers.txt");
+        int theAccountNumber = 0;
+
+
+        try (FileWriter writer = new FileWriter(accountNumberFile)) {
+            writer.write(Integer.toString(theAccountNumber));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static int AccountNumbersFile(){
         File accountNumberFile = new File("data/AccountNumbers.txt");
         int theAccountNumber = 0;
 
@@ -34,6 +48,8 @@ public class FileManager {
         try  {
             String content = Files.readString(accountNumberFile.toPath()).trim();
             theAccountNumber = Integer.parseInt(content);
+            System.out.println("content is " + content);
+            System.out.println("Account number is " + theAccountNumber);
             int newNumber = theAccountNumber + 1;
 
             try (FileWriter writer = new FileWriter(accountNumberFile)) {
@@ -43,6 +59,7 @@ public class FileManager {
         catch (IOException e) {
             e.printStackTrace();
         }
+        return theAccountNumber;
     }
 
 
@@ -52,8 +69,6 @@ public class FileManager {
         if (!userFile.exists()) {
             try (FileWriter writer = new FileWriter(userFile)) {
                 writer.append("AccountType,Balance,AccountNumber\n" );
-                writer.append("Savings,0,0000000001\n");
-                writer.append("Invest,0,0000000002\n");
                 writer.flush();
             }
             catch (IOException e) {

@@ -147,7 +147,8 @@ public class Menu {
             System.out.println("Account already exists!");
             createAccount();
         } else {
-            Account newAccount = new Account(accountType, balance, "");
+            String accountNumber = Integer.toString(FileManager.AccountNumbersFile());
+            Account newAccount = new Account(accountType, balance, accountNumber);
             Account.globalAccountList.add(newAccount);
             System.out.println("Account created successfully!");
             FileManager.fileUpdater(username);

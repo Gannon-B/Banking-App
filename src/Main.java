@@ -3,5 +3,9 @@
 
 void main() {
     System.out.println(System.getProperty("user.dir"));
+    File accountNumberFile = new File("data/AccountNumbers.txt");
+    if (!accountNumberFile.exists()) {
+        FileManager.AccountNumberFileReset();
+    }
     Menu.initialize();
 }
