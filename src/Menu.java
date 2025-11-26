@@ -18,11 +18,28 @@ public class Menu {
         else if (userChoice.equals("2")) {
             createLogin();
         }
+        else {
+            System.out.println("Invalid input. Please try again.");
+            initialize();
+        }
     }
 
     public static void userLogin() {
-        System.out.println("Please enter your username: ");
+        System.out.println("Please enter your username, or type 'back' to create a new account: ");
         username = scanner.nextLine().trim();
+
+        if (username.equalsIgnoreCase("back")) {
+            initialize();
+            return;
+        }
+
+        if (username.trim().isEmpty()) {
+            System.out.println("Invalid Username");
+            userLogin();
+            return;
+        }
+
+
         File userDir = new File("Users"); // make sure this folder exists
         if (!userDir.exists()) {
             userDir.mkdir(); // create the folder if it doesn't exist
@@ -40,13 +57,26 @@ public class Menu {
         else {
             System.out.println("No user found with username '" + username + "'.");
             System.out.println("You can create a new account for this user.");
-            createLogin();
+            initialize();
         }
     }
 
     public static void createLogin() {
-        System.out.println("Please enter your desired username: ");
+        System.out.println("Please enter your desired username, or type 'back' to login: ");
         String desiredUsername = scanner.nextLine().trim();
+
+        if (desiredUsername.equalsIgnoreCase("back")) {
+            initialize();
+            return;
+        }
+
+        if (desiredUsername.trim().isEmpty()) {
+            System.out.println("Invalid Username");
+            createLogin();
+            return;
+        }
+
+
         File userDir = new File("Users");
         File desiredFile = new File(userDir, desiredUsername + ".csv");
         if (desiredFile.exists()) {
@@ -56,7 +86,7 @@ public class Menu {
         else {
             System.out.println("Wonderful Choice");
             FileManager.fileCreator(desiredUsername);
-            userLogin();
+            initialize();
         }
     }
 
@@ -65,6 +95,7 @@ public class Menu {
         System.out.println("1. Choose Account");
         System.out.println("2. Create Account");
         System.out.println("3. Remove Account");
+        System.out.println("4. Logout");
         System.out.print("Enter your choice: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -79,6 +110,10 @@ public class Menu {
         else if (choice == 3) {
             System.out.println("\n\n\n\n\n\n\n");
             deleteAccount();
+        }
+        else if (choice == 4) {
+            System.out.println("\n\n\n\n\n\n\n");
+            initialize();
         }
     }
 

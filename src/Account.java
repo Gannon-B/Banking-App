@@ -11,31 +11,6 @@ public class Account {
     private double balance;
     public static ArrayList<Account> globalAccountList = new ArrayList<Account>();
 
-    /*public Account(String accountType, double balance) {
-        this.accountType = accountType;
-        this.balance = balance;
-       // theAccountNumber = 0;
-        File accountNumberFile = new File("data/AccountNumbers.txt");
-        try {
-            String content = Files.readString(accountNumberFile.toPath()).trim();
-            //theAccountNumber = Integer.parseInt(content);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String initID = String.valueOf(theAccountNumber);
-        StringBuilder id = new StringBuilder(String.valueOf(initID));
-
-        for  (int i = 0; i < 10-initID.length(); i++) {
-            id.insert(0, "0");
-
-        }
-
-        //this.theAccountNumber = id.toString();
-    }
-*/
-
     public Account(String accountType, double balance, String accountNumber) {
         this.accountType = accountType;
         this.balance = balance;
