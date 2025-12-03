@@ -28,15 +28,12 @@ public class FileManager {
     public static void AccountNumberFileReset(){
         File accountNumberFile = new File("data/AccountNumbers.txt");
         int theAccountNumber = 0;
-
-
         try (FileWriter writer = new FileWriter(accountNumberFile)) {
             writer.write(Integer.toString(theAccountNumber));
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static int AccountNumbersFile(){
@@ -110,19 +107,23 @@ public class FileManager {
         }
     }
 
+    public static void passwordFileCreator(String username, String password) {
+        File userFile = new File("passwords/" + username + ".txt");
+        if (!userFile.exists()) {
+            try (FileWriter writer = new FileWriter(userFile)) {
+                writer.append(password);
+                writer.flush();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            System.out.println("File Already Exists");
+        }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
@@ -134,3 +135,10 @@ public class FileManager {
 
 
 }
+
+
+
+
+
+
+

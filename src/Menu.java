@@ -2,10 +2,14 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 public class Menu {
 
     static String username;
+    static String password;
     static Scanner scanner = new Scanner(System.in);
 
 
@@ -39,20 +43,46 @@ public class Menu {
             return;
         }
 
+        System.out.println("Please enter your password, or type 'back' to create a new account: ");
+        password = scanner.nextLine().trim();
+
+        if (password.equalsIgnoreCase("back")) {
+            initialize();
+            return;
+        }
+
+        if (password.trim().isEmpty()) {
+            System.out.println("Invalid password");
+            userLogin();
+            return;
+        }
+
 
         File userDir = new File("Users"); // make sure this folder exists
         if (!userDir.exists()) {
             userDir.mkdir(); // create the folder if it doesn't exist
         }
 
+        String filePassword = "";
+
+        try {
+            filePassword = new String(Files.readAllBytes(Paths.get("passwords/" + username + ".txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         File userFile = new File(userDir, username + ".csv");
-        if (userFile.exists()) {
+        if (userFile.exists() && password.equalsIgnoreCase(filePassword)) {
             System.out.println("Welcome back, " + username + "! Loading your accounts...");
             // Clear globalAccountList first to avoid duplicates
             Account.globalAccountList.clear();
             FileManager.fileReader(username);
             System.out.println("Loaded " + Account.globalAccountList.size() + " account(s).");
             mainMenu();
+        }
+        else if (userFile.exists() && !password.equalsIgnoreCase(filePassword)) {
+            System.out.println("Invalid Password");
+            userLogin();
         }
         else {
             System.out.println("No user found with username '" + username + "'.");
@@ -64,7 +94,8 @@ public class Menu {
     public static void createLogin() {
         System.out.println("Please enter your desired username, or type 'back' to login: ");
         String desiredUsername = scanner.nextLine().trim();
-
+        System.out.println("Please enter your desired password, or type 'back' to login: ");
+        String desiredPassword = scanner.nextLine().trim();
         if (desiredUsername.equalsIgnoreCase("back")) {
             initialize();
             return;
@@ -76,6 +107,16 @@ public class Menu {
             return;
         }
 
+        if (desiredPassword.equalsIgnoreCase("back")) {
+            initialize();
+            return;
+        }
+
+        if (desiredPassword.trim().isEmpty()) {
+            System.out.println("Invalid Password");
+            createLogin();
+            return;
+        }
 
         File userDir = new File("Users");
         File desiredFile = new File(userDir, desiredUsername + ".csv");
@@ -86,6 +127,7 @@ public class Menu {
         else {
             System.out.println("Wonderful Choice");
             FileManager.fileCreator(desiredUsername);
+            FileManager.passwordFileCreator(desiredUsername, desiredPassword);
             initialize();
         }
     }
@@ -306,7 +348,7 @@ public class Menu {
         System.out.println("Enter Withdraw Amount, press 0 to go back: ");
         if (scanner.hasNextInt()) {
             double amountWithdrawn = scanner.nextInt();
-            if (amountWithdrawn > 0 && amountWithdrawn < account.getBalance()) {
+            if (amountWithdrawn > 0 && amountWithdrawn <= account.getBalance()) {
                 scanner.nextLine();
                 account.Withdraw(amountWithdrawn);
                 FileManager.fileUpdater(username);
@@ -336,7 +378,7 @@ public class Menu {
             System.out.println("Enter Transfer Amount, press 0 to go back: ");
             if (scanner.hasNextInt()) {
                 double amountToTransfer = scanner.nextInt();
-                if (amountToTransfer > 0 && amountToTransfer < account.getBalance()) {
+                if (amountToTransfer > 0 && amountToTransfer <= account.getBalance()) {
                     scanner.nextLine();
                     Account depositAccount = null;
 
